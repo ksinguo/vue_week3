@@ -6,7 +6,6 @@ let deleteModal =''
 const app = createApp({
     data() {
         return {
-            text: 'fjjj',
             apiUrl: 'https://vue3-course-api.hexschool.io/v2',
             apiPath: 'ksin588',
             products: [],
@@ -28,7 +27,7 @@ const app = createApp({
         },
         check() {
             const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-            console.log(token) //要刪除
+            //console.log(token) //要刪除
             axios.defaults.headers.common['Authorization'] = token;
             axios.post(`${this.apiUrl}/api/user/check`)
                 .then((res) => {
@@ -50,8 +49,12 @@ const app = createApp({
             if (status === 'create') {
                 //要新增產品所以要將tempProduct清空，不然會帶出前一次編輯所賦予的資料
                 this.isNew = true
-                this.tempProduct = {}
-                console.log(this.tempProduct)
+                //tempProduct一定要加上imagesUrl:[]，如果沒加在push時會有問題
+                this.tempProduct = {
+                    imagesUrl: []
+                }
+                //console.log(this.tempProduct)
+                
             } else if (status === 'edit') {
                 this.isNew = false
                 //this.tempProduct = {...product}，如果api回傳的資料沒有imagesUrl陣列(可能沒有多圖)，在新增圖片時(tempProduct.imagesUrl.push(''))因為沒有陣列所以呼叫push會出錯
@@ -59,7 +62,9 @@ const app = createApp({
                     imagesUrl: [],
                     ...product
                 }
+                
                 //console.log(this.tempProduct)
+
             }
         },
         updateProduct() {
